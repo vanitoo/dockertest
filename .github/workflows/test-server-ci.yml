@@ -37,7 +37,7 @@ jobs:
             build_mode=Release
 
       - name: "Run deploy on server"
-        uses: appleboy/ssh-action@v1  # Используйте стабильную версию
+        uses: appleboy/ssh-action@latest  # Используйте стабильную версию
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
