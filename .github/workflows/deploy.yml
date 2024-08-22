@@ -20,6 +20,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Restart Service DotNetApp
+      - name: "Restart Service DotNetApp"
+      uses: appleboy/ssh-action@master
+      with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            sudo uname a
+
+
       - name: Install ssh keys
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
