@@ -31,7 +31,6 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/dockertest:${{ github.event.release.tag_name }}
             ghcr.io/${{ github.repository_owner }}/dockertest:latest
           build-args: |
             build_mode=Release
