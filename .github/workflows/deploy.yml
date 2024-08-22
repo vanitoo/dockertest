@@ -13,32 +13,6 @@ jobs:
     environment: production
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Install SSH keys and execute command
-      run: |
-        # Установите права доступа для приватного ключа и создайте файл
-        install -m 600 -D /dev/null ~/.ssh/id_rsa
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        
-        # Добавьте сервер в список известных хостов
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-        
-        # Выполните команду uname -a на удаленном сервере
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "uname -a"
-
-    - name: Set up Docker context
-      run: |
-        docker context create remote --docker host=ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
-
-    - name: Deploy Docker Compose
-      run: |
-        docker-compose --context remote -f docker-compose.yml up -d
-
-
-
-    
       - name: Checkout 
         uses: actions/checkout@v4.1.1
         env:
@@ -46,6 +20,28 @@ jobs:
         with:
           fetch-depth: 0
 
+   
+      - name: Install SSH keys and execute command
+        run: |
+         # Установите права доступа для приватного ключа и создайте файл
+         install -m 600 -D /dev/null ~/.ssh/id_rsa
+         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        
+         # Добавьте сервер в список известных хостов
+         ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+        
+         # Выполните команду uname -a на удаленном сервере
+         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "uname -a"
+
+      - name: Set up Docker context
+        run: |
+          docker context create remote --docker host=ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+
+
+      - name: Deploy Docker Compose
+        run: |
+          docker-compose --context remote -f docker-compose.yml up -d
+   
 
       - name: "Restart Service DotNetApp"
         uses: appleboy/ssh-action@master
