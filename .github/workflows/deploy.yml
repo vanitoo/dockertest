@@ -20,6 +20,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Test server connectivity
+        run: |
+         nc -zv ${{ secrets.SSH_HOST }} 22
+
    
       - name: Install SSH keys and execute command
         run: |
@@ -31,7 +35,7 @@ jobs:
          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
          # Выполните команду uname -a на удаленном сервере
-         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "uname -a"
+         ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "uname -a"
 
       - name: Set up Docker context
         run: |
